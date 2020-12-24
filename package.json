@@ -1,0 +1,29 @@
+{
+  "name": "cc_service",
+  "version": "1.0.0",
+  "description": "technical exercise for cliengo",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gtalonso/entrevista-guillermotorres.git"
+  },
+  "author": "Guillermo Torres",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gtalonso/entrevista-guillermotorres/issues"
+  },
+  "homepage": "https://github.com/gtalonso/entrevista-guillermotorres#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.11.8"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1"
+  }
+}
