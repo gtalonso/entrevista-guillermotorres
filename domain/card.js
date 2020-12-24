@@ -19,7 +19,11 @@ class Card {
     };
   }
 
-  maskCardNumber() {}
+  maskCardNumber() {
+    let digits = this.pan.slice(0, -4);
+    let last4Digits = this.pan.slice(-4);
+    return digits.replace(/./g, "*") + last4Digits;
+  }
 
   validCardNumber() {
     if (/\D/.test(this.pan)) {
