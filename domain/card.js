@@ -1,4 +1,7 @@
-import { PANError } from "./errors.js";
+import crypto from "crypto";
+
+import config from "../config.js";
+import { PANDigitsError, PANLenError } from "./errors.js";
 
 class Card {
   constructor(pan, brandType, userId) {
@@ -19,8 +22,15 @@ class Card {
   maskCardNumber() {}
 
   validCardNumber() {
+    if (/\D/.test(this.pan)) {
+      return false;
+    }
+    return true;
+  }
+
+  validCardNumberLen() {
     let panLen = this.brandType === "amex" ? 15 : 16;
-    if (/\D/.test(this.pan) || this.pan.length != panLen) {
+    if (this.pan.length != panLen) {
       return false;
     }
     return true;
@@ -28,9 +38,19 @@ class Card {
 
   hashPAN() {
     if (!this.validCardNumber()) {
-      throw new PANError();
+      throw new PANDigitsError();
     }
+    if (!this.validCardNumberLen()) {
+      throw new PANLenError(this.brandType);
+    }
+    return hash(this.pan);
   }
 }
+
+const hash = (pan) =>
+  crypto
+    .createHmac(config.hashing.method, config.hashing.key)
+    .update(pan)
+    .digest("hex");
 
 export default Card;

@@ -2,7 +2,7 @@ import chai from "chai";
 const { expect } = chai;
 
 import Card from "../domain/card.js";
-import { PANError } from "../domain/errors.js";
+import { PANDigitsError, PANLenError } from "../domain/errors.js";
 
 describe("Card data hashing", () => {
   const dummyVisaCard = {
@@ -24,10 +24,14 @@ describe("Card data hashing", () => {
   };
   //this works for visa, mastercard and discovercards.
   describe("Visa card validation and hashing", () => {
-    let newCard = new Card("1234567891011123", "visa");
+    let newCard = new Card(1234567891011123, "visa", 1);
     let processed = newCard.process();
     it("PAN must be 16 digits", () => {
-      let worngCard = new Card("234567891011123", "visa");
+      let worngCard = new Card(234567891011123, "visa", 1);
+      expect(worngCard.process).to.throw();
+    });
+    it("PAN must be only digits", () => {
+      let worngCard = new Card("234567891011A23", "visa", 1);
       expect(worngCard.process).to.throw();
     });
     it("Should mask the cardNumber", () => {
@@ -39,11 +43,11 @@ describe("Card data hashing", () => {
   });
   // this works for american express cards.
   describe("Amex card validation and hashing", () => {
-    let newCard = new Card("123456781011123", "amex");
+    let newCard = new Card(123456781011123, "amex", 1);
     let processed = newCard.process();
     it("PAN must be 15 digits", () => {
-      let worngCard = new Card("2345678910111231", "amex");
-      expect(newCard.process()).to.throw(PanError);
+      let worngCard = new Card("2345678910111231", "amex", 1);
+      expect(worngCard.process).to.throw();
     });
     it("Should mask the cardNumber", () => {
       expect(processed.maskedNumber).to.be.equal(dummyAmexCard.maskedNumber);
