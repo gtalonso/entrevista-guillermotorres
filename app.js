@@ -1,3 +1,5 @@
+"use strict";
+
 import express from "express";
 
 import config from "./config.js";
@@ -9,6 +11,6 @@ app.get("/", (req, res) => {
   res.send("working healthy");
 });
 
-app.listen(config.api.port, () => {
+app.listen(config.api.port, config.api.host, () => {
   console.log(`exercise listenning at http://localhost:${config.api.port}`);
 });

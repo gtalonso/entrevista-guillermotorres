@@ -1,6 +1,6 @@
 const config = {
   database: {
-    uri: process.env.DATABSE_URI || "mongodb://localhost:27017/cc_app",
+    uri: process.env.DATABSE_URI || "mongodb://mongo:27017/cc_app",
   },
   hashing: {
     method: process.env.HASH_METHOD || "sha256",
@@ -10,6 +10,7 @@ const config = {
   },
   api: {
     port: process.env.PORT || 3000,
+    host: process.env.HOST || "0.0.0.0",
   },
 };
 
