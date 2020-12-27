@@ -4,10 +4,11 @@ import config from "../config.js";
 import { PANDigitsError, PANLenError } from "./errors.js";
 
 class Card {
-  constructor(pan, brandType, userId) {
-    this.pan = String(pan);
-    this.userId = userId;
+  constructor({ cardNumber, userId, brandType, cardRepository }) {
+    this.pan = String(cardNumber);
+    this.userId = String(userId);
     this.brandType = brandType;
+    this.repo = cardRepository;
   }
 
   process() {
@@ -41,6 +42,7 @@ class Card {
   }
 
   hashPAN() {
+    console.log(this.pan);
     if (!this.validCardNumber()) {
       throw new PANDigitsError();
     }
@@ -48,6 +50,14 @@ class Card {
       throw new PANLenError(this.brandType);
     }
     return hash(this.pan);
+  }
+
+  create() {
+    return this.repo.save(this.process);
+  }
+
+  static getByUserId(userId, cardRepository) {
+    return cardRepository.findByUserId(userId);
   }
 }
 
