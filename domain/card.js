@@ -12,19 +12,14 @@ class Card {
   }
 
   async process() {
-    let primary = await this.isFirs().then((result) => result);
+    let isPrimary = await this.repo.isFirstCard(this.userId);
     return {
       userId: this.userId,
       cardToken: this.hashPAN(),
       brandType: this.brandType.toLowerCase(),
       maskedNumber: this.maskCardNumber(),
-      primary: primary,
+      primary: isPrimary,
     };
-  }
-
-  async isFirs() {
-    let result = await this.repo.isFirstCard(this.userId);
-    return result;
   }
 
   maskCardNumber() {
