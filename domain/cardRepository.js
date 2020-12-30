@@ -10,6 +10,10 @@ class CardRepository {
   getByUserId(userId) {
     return;
   }
+
+  isFirstCard(userId) {
+    return;
+  }
 }
 
 export default CardRepository;
