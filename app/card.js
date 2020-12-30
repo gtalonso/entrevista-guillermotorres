@@ -1,4 +1,3 @@
-import { use } from "chai";
 import CardRepository from "../domain/cardRepository.js";
 
 class CardRepositoryImp extends CardRepository {
@@ -7,12 +6,22 @@ class CardRepositoryImp extends CardRepository {
   }
 
   save(card) {
-    this.model.create(card, (err, newCard) => {
-      if (err) return handleError(err);
-    });
+    return new this.model(card)
+      .save()
+      .then((doc) => ({
+        cardType: doc.cardType,
+        userId: doc.userId,
+        primary: doc.primary,
+      }))
+      .catch((err) => err);
   }
 
-  getByUserId(userId) {
-    return this.model.find({ userId: String(userId) }).lean();
+  findByUserId(userId) {
+    return this.model
+      .find({ userId: String(userId) })
+      .select("userId brandType maskedNumber primary -_id")
+      .lean();
   }
 }
+
+export default CardRepositoryImp;

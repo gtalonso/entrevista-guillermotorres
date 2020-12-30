@@ -1,6 +1,6 @@
 class PANLenError extends Error {
   constructor(brandType) {
-    super(`The length for ${brandType} is wrong`);
+    super(`The card number length for ${brandType} is wrong`);
     this.name = "PANError";
   }
 }
@@ -12,4 +12,11 @@ class PANDigitsError extends Error {
   }
 }
 
-export { PANLenError, PANDigitsError };
+class DBError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "DBError";
+  }
+}
+
+export { PANLenError, PANDigitsError, DBError };

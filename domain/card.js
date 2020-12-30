@@ -1,10 +1,10 @@
 import crypto from "crypto";
 
 import config from "../config.js";
-import { PANDigitsError, PANLenError } from "./errors.js";
+import { PANDigitsError, PANLenError, DBError } from "./errors.js";
 
 class Card {
-  constructor({ cardNumber, userId, brandType, cardRepository }) {
+  constructor({ cardNumber, userId, brandType }, cardRepository) {
     this.pan = String(cardNumber);
     this.userId = String(userId);
     this.brandType = brandType;
@@ -15,7 +15,7 @@ class Card {
     return {
       userId: this.userId,
       cardToken: this.hashPAN(),
-      brandType: this.brandType,
+      brandType: this.brandType.toLowerCase(),
       maskedNumber: this.maskCardNumber(),
     };
   }
@@ -42,7 +42,6 @@ class Card {
   }
 
   hashPAN() {
-    console.log(this.pan);
     if (!this.validCardNumber()) {
       throw new PANDigitsError();
     }
@@ -52,8 +51,12 @@ class Card {
     return hash(this.pan);
   }
 
-  create() {
-    return this.repo.save(this.process);
+  async create() {
+    let result = await this.repo.save(this.process());
+    if (result.errors) {
+      throw new DBError(result.message);
+    }
+    return result;
   }
 
   static getByUserId(userId, cardRepository) {
