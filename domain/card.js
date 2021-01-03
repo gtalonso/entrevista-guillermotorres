@@ -11,14 +11,12 @@ class Card {
     this.repo = cardRepository;
   }
 
-  async process() {
-    let isPrimary = await this.repo.isFirstCard(this.userId);
+  process() {
     return {
       userId: this.userId,
       cardToken: this.hashPAN(),
       brandType: this.brandType.toLowerCase(),
       maskedNumber: this.maskCardNumber(),
-      primary: isPrimary,
     };
   }
 
@@ -54,7 +52,8 @@ class Card {
   }
 
   async create() {
-    let card = await this.process();
+    let card = this.process();
+    card.primary = await this.repo.isFirstCard(this.userId);
     let result = this.repo.save(card);
     if (result.errors) {
       throw new DBError(result.message);
